@@ -112,6 +112,7 @@ object TestList {
     println(dropWhile(List(11, 22, 33, 44, 12), (y: Int) => y < 30))
     println(init(List(11, 12, 13, 14)))
     println(length(List(11, 12, 13, 14, 15)))
+
     val l = List(1, 2, 3, 5)
     val l2 = List(11, 12, 13, 15)
     val ld = List(1.0, 2.0, 3.0, 5.0)
