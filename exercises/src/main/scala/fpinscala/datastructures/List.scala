@@ -97,6 +97,26 @@ object List { // `List` companion object. Contains functions for creating and wo
     case Nil => Nil
     case Cons(h, xs) => if (f(h)) Cons(h, filter(xs)(f)) else filter(xs)(f)
   }
+
+  def filterWithFlatMap[A](l: List[A])(f: A => Boolean): List[A] =
+    flatMap(l)(e => if (f(e)) List(e) else Nil)
+
+  def flatMap[A, B](as: List[A]) (f: A => List[B]): List[B] = as match {
+    case Nil => Nil
+    case Cons(h, xs) => append(f(h), flatMap(xs)(f))
+  }
+
+  def zipInt(l1: List[Int], l2: List[Int]): List[Int] =  (l1, l2) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1, xs1), Cons(h2, xs2)) => Cons(h1 + h2, zipInt(xs1, xs2))
+  }
+
+  def zipWith[A](l1: List[A], l2: List[A])(f: (A, A) => A): List[A] =  (l1, l2) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1, xs1), Cons(h2, xs2)) => Cons(f(h1, h2), zipWith(xs1, xs2)(f))
+  }
 }
 
 object TestList {
