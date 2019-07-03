@@ -52,7 +52,16 @@ object Option {
     case _ => None
   }
 
-  def sequence[A](a: List[Option[A]]): Option[List[A]] = ???
+  def sequenceStandalone[A](a: List[Option[A]]): Option[List[A]] = a match {
+    case Nil => Some(Nil)
+    case h :: t => h.flatMap((v: A) => sequence(t) map (v :: _))
+  }
 
-  def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = ???
+  def sequence[A](a: List[Option[A]]): Option[List[A]] = traverse(a)((a: Option[A]) => a)
+
+  def traverseWithDoubleListLookup[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = sequence(a.map(f))
+  def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = a match {
+    case Nil => Some(Nil)
+    case h :: t => f(h).flatMap((v: B) => traverse(t)(f) map (v :: _))
+  }
 }

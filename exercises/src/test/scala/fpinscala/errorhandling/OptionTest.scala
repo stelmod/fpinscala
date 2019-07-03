@@ -87,7 +87,42 @@ class OptionTest extends FunSpec with Matchers {
     it ("should be calculated if both Some") {
       Option.map2(Some(1), Some(4)) ( (a, b) => a + b) shouldBe Some(5)
     }
+  }
 
+  describe("sequence") {
+    it ("should return Some(Nil) for Nil list") {
+      Option.sequence(List()) shouldBe Some(Nil)
+    }
+
+    it ("should return None for list with only None") {
+      Option.sequence(List(None)) shouldBe None
+    }
+
+    it ("should return None for list with at least one None") {
+      Option.sequence(List(Some(2), None, Some(4))) shouldBe None
+    }
+
+    it ("should return all value when there is no None element") {
+      Option.sequence(List(Some(2), Some(4))) shouldBe Some(List(2, 4))
+    }
+  }
+
+  describe("traverse") {
+    it ("should return Some(Nil) for Nil list") {
+      Option.traverse(List())(e => Some(e.toString)) shouldBe Some(Nil)
+    }
+
+    it ("should return None for list with only None") {
+      Option.traverse(List(None))(e => e flatMap( v => Some(v.toString))) shouldBe None
+    }
+
+    it ("should return None for list with at least one None") {
+      Option.traverse(List(Some(2), None, Some(4)))(e => e flatMap( v => Some(v.toString))) shouldBe None
+    }
+
+    it ("should return all value when there is no None element") {
+      Option.traverse(List(Some(2), Some(4)))(e => e flatMap( v => Some(v.toString))) shouldBe Some(List("2", "4"))
+    }
   }
 
 }
